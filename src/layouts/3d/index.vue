@@ -23,9 +23,14 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true, // 启用抗锯齿
   alpha: true,
 })
+
+renderer.setPixelRatio(window.devicePixelRatio * 1)
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
+
 const controls = new OrbitControls(camera, renderer.domElement)
 const lookAtPoint = new THREE.Vector3(0, 0, 0)
-const axesHelper = new THREE.AxesHelper(5)
+// const axesHelper = new THREE.AxesHelper(5)
 
 function initCSS3D() {
   css3dRenderer.setSize(window.innerWidth, window.innerHeight)
@@ -70,7 +75,7 @@ onMounted(() => {
       })
     })
   })
-  scene.add(axesHelper)
+  // scene.add(axesHelper)
   // 初始化轨道控制器
   controls.enableDamping = true
   controls.dampingFactor = 0.08
