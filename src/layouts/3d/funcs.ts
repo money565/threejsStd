@@ -220,9 +220,11 @@ export function selectItem(scene: { traverse: (arg0: (object: any) => void) => v
     objects[x].add(line)
     lines.push(line)
   }
-  acs.currentItem = targetItem
-  acs.resetData()
-  publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, `${targetItem}_init`)
+  if(acs.currentItem !== targetItem){
+      acs.currentItem = targetItem
+      acs.resetData()
+      publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, `${targetItem}_init`)
+    }
 }
 
 export function onMouseUp(event: any, camera: THREE.Camera, scene: any) {

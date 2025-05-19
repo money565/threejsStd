@@ -24,6 +24,15 @@ function linSwitch() {
     publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, sendMesg)
   }
 }
+
+watch(() => acs.currentItem, () => {
+  if (showPowerLine.value === true) {
+    const now = Math.floor(new Date().getTime() / 1000)
+    const tenMinutesAgo = now - 30 * 60
+    const sendMesg = `${acs.currentItem}_powerLine_${now}_${tenMinutesAgo}`
+    publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, sendMesg)
+  }
+})
 </script>
 
 <template>

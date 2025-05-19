@@ -45,7 +45,7 @@ const option = ref({
   },
   tooltip: {
     trigger: 'axis',
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
     axisPointer: {
       lineStyle: {
         color: '#3763cd', // 显示竖线颜色
@@ -53,7 +53,7 @@ const option = ref({
       },
     },
     textStyle: {
-      color: '#ffffff',
+      color: '#363636',
     },
   },
   xAxis: [

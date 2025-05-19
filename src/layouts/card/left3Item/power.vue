@@ -185,7 +185,10 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-watch(() => acs.refreshPowerLineKey, () => {
+watch(() => acs.power.refreshKey, () => {
+  option.value.xAxis[0].data = acs.powerLine[2]
+  option.value.series[0].data = acs.powerLine[0]
+  option.value.series[1].data = acs.powerLine[1]
   chartInstance!.setOption(option.value)
 })
 </script>

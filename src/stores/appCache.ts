@@ -84,6 +84,29 @@ export const useAppCacheStore = defineStore('appCache', () => {
     }],
   })
 
+  const powerCurrentPercentShow = computed<number[]>(() => {
+    const temp = []
+    for (const i in allItemDatas.value.power) {
+      temp.push(Number((100 * allItemDatas.value.power[i].currentLoad / allItemDatas.value.power[i].maxLoad).toFixed(1)))
+    }
+    return temp
+  })
+  const powerCurrentValueShow = computed<number[]>(() => {
+    const temp = []
+    for (const i in allItemDatas.value.power) {
+      temp.push(allItemDatas.value.power[i].currentLoad)
+    }
+    return temp
+  })
+
+  const powerMaxShow = computed<number[]>(() => {
+    const temp = []
+    for (const _i in allItemDatas.value.power) {
+      temp.push(100)
+    }
+    return temp
+  })
+
   const voltmeter = ref<voltmeterOpt[]>([{
     volName: 'A项电压',
     volValue: 0,
@@ -194,5 +217,8 @@ export const useAppCacheStore = defineStore('appCache', () => {
     powerLine,
     EC,
     refreshPowerLineKey,
+    powerCurrentPercentShow,
+    powerCurrentValueShow,
+    powerMaxShow,
   }
 })
