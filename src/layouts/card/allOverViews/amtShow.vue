@@ -41,6 +41,7 @@ const barBottomColor = [
 ]
 const option = ref({
   tooltip: {
+    valueFormatter: (value: number) => value.toFixed(2),
     trigger: 'item',
   },
   grid: {

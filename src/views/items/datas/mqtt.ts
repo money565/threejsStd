@@ -1,5 +1,5 @@
 /* eslint-disable no-fallthrough */
-/* eslint-disable no-case-declarations */
+
 /* eslint-disable no-async-promise-executor */
 
 import type { MqttClient } from 'mqtt'
@@ -57,6 +57,7 @@ export function connMqtt() {
           acs.ItemOnline = msg.data
         }
         if (msg.target === 'volLine') {
+          console.log(msg.data)
           acs.volteLine[0] = msg.data[0]
           acs.volteLine[1] = msg.data[1]
           acs.volteLine[2] = msg.data[2]
@@ -74,6 +75,7 @@ export function connMqtt() {
           acs.refreshKey = new Date().getTime()
         }
         if (msg.target === 'amtLine') {
+          console.log(msg.data)
           acs.amterLine[0] = msg.data[0]
           acs.amterLine[1] = msg.data[1]
           acs.amterLine[2] = msg.data[2]
@@ -90,8 +92,22 @@ export function connMqtt() {
           acs.amterLine[4] = temp
           acs.refreshAmterLineKey = new Date().getTime()
         }
+        if (msg.target === 'powerLine') {
+          console.log(msg.data)
+          const temp = []
+          const dn = msg.data[0].length
+          const TimeRange = Number(msg.TR[1]) - Number(msg.TR[0])
+          acs.powerLine = msg.data
+          for (let i = 0; i <= dn; i++) {
+            const d = new Date(Math.ceil(Number(msg.TR[0]) + i * (TimeRange / dn)) * 1000)
+            const hour = d.getHours()
+            const min = d.getMinutes()
+            temp.push(`${hour}:${min}`)
+          }
+          acs.powerLine[2] = temp
+          acs.refreshPowerLineKey = new Date().getTime()
+        }
         if (msg.target === 'init') {
-          console.log('设备初始化信息')
           const res = String(msg.data).split('_')
           acs.voltmeter[0].volValue = Number(res[0])
           acs.voltmeter[1].volValue = Number(res[1])
@@ -101,18 +117,19 @@ export function connMqtt() {
           acs.ammeter[1].ammValue = Number(res[5])
           acs.ammeter[2].ammValue = Number(res[6])
           acs.ammeter[3].ammValue = Number(res[7])
-          const temp = []
-          for (let i = 0; i < msg.power.length; i++) {
-            temp.push(Number(msg.power[i]))
-            if (Number(i) % 10 === 0) {
-              acs.power.recordTime.push(String(i))
+          acs.power.ap = Number(res[8])
+          acs.power.rp = Number(res[9])
+          acs.power.pf = Number(res[10])
+          for (const i in acs.canBeClickedItem) {
+            if (acs.currentItem === acs.canBeClickedItem[i]) {
+              acs.power.max = acs.power.pf * acs.itemPower[i]
+              break
             }
           }
-          acs.power.powerOptValue = temp
-          acs.power.currentTime = new Date().getTime()
+          acs.power.refreshKey = new Date().getTime()
         }
+
         if (msg.target === 'data') {
-          console.log('及时信息')
           const datas = String(msg.data)
           acs.readData.item = msg.item
           acs.readData.refresh = new Date().getTime()
@@ -164,21 +181,21 @@ export function connMqtt() {
                     acs.amterLine[4].push(`${hour}:${min}`)
                     acs.refreshAmterLineKey = ttt.getTime()
                     break
+                  case '8':
+                    acs.power.ap = Number(dataList[i].split('_')[d])
+                  case '9':
+                    acs.power.rp = Number(dataList[i].split('_')[d])
+                  case '10':
+                    acs.power.pf = Number(dataList[i].split('_')[d])
+                    for (const i in acs.canBeClickedItem) {
+                      if (acs.currentItem === acs.canBeClickedItem[i]) {
+                        acs.power.max = acs.power.pf * acs.itemPower[i]
+                        break
+                      }
+                    }
+                    acs.power.refreshKey = new Date().getTime()
                   case '11':
-                    acs.power.recordTime = []
-                    const powerLen = acs.power.powerOptValue.length
-                    for (let i = 0; i <= powerLen; i++) {
-                      if (i % 10 === 0)
-                        acs.power.recordTime.push(String(i))
-                    }
-                    if (powerLen > 100) {
-                      acs.power.powerOptValue.splice(0, 1)
-                      acs.power.powerOptValue.push(Number(dataList[i].split('_')[d]))
-                    }
-                    else {
-                      acs.power.powerOptValue.push(Number(dataList[i].split('_')[d]))
-                    }
-                    acs.power.currentTime = new Date().getTime()
+                    acs.EC = Number(dataList[i].split('_')[d])
                   default:
                 }
               }

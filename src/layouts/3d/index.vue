@@ -24,9 +24,9 @@ const renderer = new THREE.WebGLRenderer({
   alpha: true,
 })
 
-renderer.setPixelRatio(window.devicePixelRatio * 1)
-renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFSoftShadowMap
+// renderer.setPixelRatio(window.devicePixelRatio * 1.2)
+// renderer.shadowMap.enabled = true
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 const controls = new OrbitControls(camera, renderer.domElement)
 const lookAtPoint = new THREE.Vector3(0, 0, 0)

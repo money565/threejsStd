@@ -115,6 +115,8 @@ const option = ref({
   ],
   series: [
     {
+      large: true, // 开启大数据优化
+      largeThreshold: 500, // 数据量超过1000时启用优化
       name: 'A项电流',
       type: 'line',
       smooth: true,
@@ -143,6 +145,8 @@ const option = ref({
       data: acs.amterLine[0],
     },
     {
+      large: true, // 开启大数据优化
+      largeThreshold: 500, // 数据量超过1000时启用优化
       name: 'B项电流',
       type: 'line',
       smooth: true,
@@ -174,6 +178,8 @@ const option = ref({
       data: acs.amterLine[1],
     },
     {
+      large: true, // 开启大数据优化
+      largeThreshold: 500, // 数据量超过1000时启用优化
       name: 'C项电流',
       type: 'line',
       smooth: true,
@@ -205,6 +211,8 @@ const option = ref({
       data: acs.amterLine[2],
     },
     {
+      large: true, // 开启大数据优化
+      largeThreshold: 500, // 数据量超过1000时启用优化
       name: '总电流',
       type: 'line',
       smooth: true,

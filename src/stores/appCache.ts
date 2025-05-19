@@ -16,10 +16,11 @@ interface ammeterOpt {
 }
 
 interface powerOpt {
-  powerOptName: string
-  powerOptValue: number[]
-  recordTime: string[]
-  currentTime: number
+  ap: number
+  rp: number
+  max: number
+  pf: number
+  refreshKey: number
 }
 
 interface optionsOpt {
@@ -46,6 +47,7 @@ interface allItemDatasOpt {
 export const useAppCacheStore = defineStore('appCache', () => {
   const refreshKey = ref(0)
   const refreshAmterLineKey = ref(0)
+  const refreshPowerLineKey = ref(0)
   const mqttClient = ref()
   const currentProject = ref<number>()
   const currentItem = ref<string>('-')
@@ -62,6 +64,9 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const humidity = ref<number | string>('-')
   const volteLine = ref<[number[], number[], number[], number[], string[]]>([[], [], [], [], []])
   const amterLine = ref<[number[], number[], number[], number[], string[]]>([[], [], [], [], []])
+  const powerLine = ref<[number[], number[], string[]]>([[], [], []])
+  const EC = ref<number>(0) // ElectricityConsumption 总用电量
+
   const allOverView = ref(true) // 总览所有数据
 
   const allItemDatas = ref<allItemDatasOpt>({
@@ -106,10 +111,11 @@ export const useAppCacheStore = defineStore('appCache', () => {
     ammValue: 0,
   }])
   const power = ref<powerOpt>({
-    powerOptName: '功率表',
-    powerOptValue: [],
-    recordTime: [],
-    currentTime: 0,
+    ap: 0,
+    rp: 0,
+    max: 0,
+    pf: 0,
+    refreshKey: 0,
   })
 
   function resetData() {
@@ -140,17 +146,21 @@ export const useAppCacheStore = defineStore('appCache', () => {
       ammValue: 0,
     }]
     power.value = {
-      powerOptName: '功率表',
-      powerOptValue: [],
-      recordTime: [],
-      currentTime: 0,
+      ap: 0,
+      rp: 0,
+      max: 0,
+      pf: 0,
+      refreshKey: 0,
     }
     temperature.value = '-'
     humidity.value = '-'
     volteLine.value = [[], [], [], [], []]
     amterLine.value = [[], [], [], [], []]
+    powerLine.value = [[], [], []]
     refreshKey.value = 0
     refreshAmterLineKey.value = 0
+    refreshPowerLineKey.value = 0
+    EC.value = 0
   }
 
   const options = ref<optionsOpt>({
@@ -158,5 +168,31 @@ export const useAppCacheStore = defineStore('appCache', () => {
     volume: 50,
     brightness: 10,
   })
-  return { currentProject, projectList, voltmeter, ammeter, power, options, mqttClient, resetData, temperature, humidity, currentItem, volteLine, ItemOnline, canBeClickedItem, readData, refreshKey, refreshAmterLineKey, amterLine, itemPF, allOverView, allItemDatas, itemPower }
+  return {
+    currentProject,
+    projectList,
+    voltmeter,
+    ammeter,
+    power,
+    options,
+    mqttClient,
+    resetData,
+    temperature,
+    humidity,
+    currentItem,
+    volteLine,
+    ItemOnline,
+    canBeClickedItem,
+    readData,
+    refreshKey,
+    refreshAmterLineKey,
+    amterLine,
+    itemPF,
+    allOverView,
+    allItemDatas,
+    itemPower,
+    powerLine,
+    EC,
+    refreshPowerLineKey,
+  }
 })
