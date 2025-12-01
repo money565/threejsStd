@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const currentDate = ref('')
 const currentTime = ref('')
-let timer: number
+let timer: any
 
 function updateTime() {
   const now = new Date()

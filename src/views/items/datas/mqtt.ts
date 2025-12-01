@@ -1,5 +1,3 @@
-/* eslint-disable no-case-declarations */
-
 /* eslint-disable no-fallthrough */
 
 /* eslint-disable no-async-promise-executor */
@@ -38,6 +36,7 @@ export function connMqtt() {
       mqttValue.on('message', (topic, message) => {
         const msg = JSON.parse(message.toString())
         if (msg.target === 'allInit') {
+          console.log('allInit', msg)
           const vol = []
           const amt_m = []
           const amt_c = []
@@ -65,13 +64,16 @@ export function connMqtt() {
           }
         }
         if (msg.target === 'rd') {
+          console.log('rd', msg.item)
           acs.readData.item = msg.item
           acs.readData.refresh = new Date().getTime()
         }
         if (msg.target === 'online') {
+          console.log('online', msg)
           acs.ItemOnline = msg.data
         }
         if (msg.target === 'volLine') {
+          console.log('volLine', msg.data)
           acs.volteLine[0] = msg.data[0]
           acs.volteLine[1] = msg.data[1]
           acs.volteLine[2] = msg.data[2]
@@ -120,18 +122,23 @@ export function connMqtt() {
           acs.power.refreshKey = new Date().getTime()
         }
         if (msg.target === 'init') {
-          const res = String(msg.data).split('_')
-          acs.voltmeter[0].volValue = Number(res[0])
-          acs.voltmeter[1].volValue = Number(res[1])
-          acs.voltmeter[2].volValue = Number(res[2])
-          acs.voltmeter[3].volValue = Number(res[3])
-          acs.ammeter[0].ammValue = Number(res[4])
-          acs.ammeter[1].ammValue = Number(res[5])
-          acs.ammeter[2].ammValue = Number(res[6])
-          acs.ammeter[3].ammValue = Number(res[7])
-          acs.power.ap = Number(res[8])
-          acs.power.rp = Number(res[9])
-          acs.power.pf = Number(res[10])
+          console.log('init', msg.data)
+          const res = String(msg.data).split('&')
+          const vol_res = res[0].split('_')
+          const temp_res = res[1].split('_')
+          acs.voltmeter[0].volValue = Number(vol_res[0])
+          acs.voltmeter[1].volValue = Number(vol_res[1])
+          acs.voltmeter[2].volValue = Number(vol_res[2])
+          acs.voltmeter[3].volValue = Number(vol_res[3])
+          acs.ammeter[0].ammValue = Number(vol_res[4])
+          acs.ammeter[1].ammValue = Number(vol_res[5])
+          acs.ammeter[2].ammValue = Number(vol_res[6])
+          acs.ammeter[3].ammValue = Number(vol_res[7])
+          acs.power.ap = Number(vol_res[8])
+          acs.power.rp = Number(vol_res[9])
+          acs.power.pf = Number(vol_res[10])
+          acs.temperature = Number(temp_res[0])
+          acs.humidity = Number(temp_res[1])
           for (const i in acs.canBeClickedItem) {
             if (acs.currentItem === acs.canBeClickedItem[i]) {
               acs.power.max = acs.power.pf * acs.itemPower[i]
@@ -142,6 +149,7 @@ export function connMqtt() {
         }
 
         if (msg.target === 'data') {
+          console.log('data', msg.data)
           const datas = String(msg.data)
           acs.readData.item = msg.item
           acs.readData.refresh = new Date().getTime()
@@ -149,104 +157,101 @@ export function connMqtt() {
             acs.temperature = Number(datas.split('&')[1].split('_')[0])
             acs.humidity = Number(datas.split('&')[1].split('_')[1])
           }
-          const dataList = datas.split(',')
-          for (const i in dataList) {
-            for (const d in dataList[i].split('_')) {
-              const ttt = new Date()
-              const hour = ttt.getHours()
-              const min = ttt.getMinutes()
-              switch (d) {
-                case '0':
-                  acs.voltmeter[0].volValue = Number(dataList[i].split('_')[d])
-                  acs.volteLine[0].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '1':
-                  acs.voltmeter[1].volValue = Number(dataList[i].split('_')[d])
-                  acs.volteLine[1].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '2':
-                  acs.voltmeter[2].volValue = Number(dataList[i].split('_')[d])
-                  acs.volteLine[2].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '3':
-                  acs.voltmeter[3].volValue = Number(dataList[i].split('_')[d])
-                  acs.volteLine[3].push(Number(dataList[i].split('_')[d]))
-                  acs.volteLine[4].push(`${hour}:${min}`)
-                  if(acs.volteLine[4].length > 600){
-                    const startTime = getTimestamp(acs.volteLine[4][0])
-                    const endTime = getTimestamp(acs.volteLine[4][acs.volteLine[4].length - 1])
-                    if (endTime-startTime > 1800000){
-                      acs.volteLine[4].splice(0, 1)
-                      acs.volteLine[0].splice(0, 1)
-                      acs.volteLine[1].splice(0, 1)
-                      acs.volteLine[2].splice(0, 1)
-                      acs.volteLine[3].splice(0, 1)
-                    }
+          const dataList = datas.split('&')[0].split('_')
+          const ttt = new Date()
+          const hour = ttt.getHours()
+          const min = ttt.getMinutes()
+          for (let d = 0; d <= 10; d++) {
+            switch (String(d)) {
+              case '0':
+                acs.voltmeter[0].volValue = Number(dataList[d])
+                acs.volteLine[0].push(Number(dataList[d]))
+                break
+              case '1':
+                acs.voltmeter[1].volValue = Number(dataList[d])
+                acs.volteLine[1].push(Number(dataList[d]))
+                break
+              case '2':
+                acs.voltmeter[2].volValue = Number(dataList[d])
+                acs.volteLine[2].push(Number(dataList[d]))
+                break
+              case '3':
+                acs.voltmeter[3].volValue = Number(dataList[d])
+                acs.volteLine[3].push(Number(dataList[d]))
+                acs.volteLine[4].push(`${hour}:${min}`)
+                if (acs.volteLine[4].length > 600) {
+                  const startTime = getTimestamp(acs.volteLine[4][0])
+                  const endTime = getTimestamp(acs.volteLine[4][acs.volteLine[4].length - 1])
+                  if (endTime - startTime > 1800000) {
+                    acs.volteLine[4].splice(0, 1)
+                    acs.volteLine[0].splice(0, 1)
+                    acs.volteLine[1].splice(0, 1)
+                    acs.volteLine[2].splice(0, 1)
+                    acs.volteLine[3].splice(0, 1)
                   }
-                  
-                  acs.refreshKey = ttt.getTime()
-                  break
-                case '4':
-                  acs.ammeter[0].ammValue = Number(dataList[i].split('_')[d])
-                  acs.amterLine[0].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '5':
-                  acs.ammeter[1].ammValue = Number(dataList[i].split('_')[d])
-                  acs.amterLine[1].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '6':
-                  acs.ammeter[2].ammValue = Number(dataList[i].split('_')[d])
-                  acs.amterLine[2].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '7':
-                  acs.ammeter[3].ammValue = Number(dataList[i].split('_')[d])
-                  acs.amterLine[3].push(Number(dataList[i].split('_')[d]))
-                  acs.amterLine[4].push(`${hour}:${min}`)
-                  if(acs.amterLine[4].length > 600){
-                    const startTime = getTimestamp(acs.amterLine[4][0])
-                    const endTime = getTimestamp(acs.amterLine[4][acs.amterLine[4].length - 1])
-                    if (endTime-startTime > 1800000){
-                      acs.amterLine[4].splice(0, 1)
-                      acs.amterLine[0].splice(0, 1)
-                      acs.amterLine[1].splice(0, 1)
-                      acs.amterLine[2].splice(0, 1)
-                      acs.amterLine[3].splice(0, 1)
-                    }
+                }
+                acs.refreshKey = ttt.getTime()
+                break
+              case '4':
+                acs.ammeter[0].ammValue = Number(dataList[d])
+                acs.amterLine[0].push(Number(dataList[d]))
+                break
+              case '5':
+                acs.ammeter[1].ammValue = Number(dataList[d])
+                acs.amterLine[1].push(Number(dataList[d]))
+                break
+              case '6':
+                acs.ammeter[2].ammValue = Number(dataList[d])
+                acs.amterLine[2].push(Number(dataList[d]))
+                break
+              case '7':
+                acs.ammeter[3].ammValue = Number(dataList[d])
+                acs.amterLine[3].push(Number(dataList[d]))
+                acs.amterLine[4].push(`${hour}:${min}`)
+                if (acs.amterLine[4].length > 600) {
+                  const startTime = getTimestamp(acs.amterLine[4][0])
+                  const endTime = getTimestamp(acs.amterLine[4][acs.amterLine[4].length - 1])
+                  if (endTime - startTime > 1800000) {
+                    acs.amterLine[4].splice(0, 1)
+                    acs.amterLine[0].splice(0, 1)
+                    acs.amterLine[1].splice(0, 1)
+                    acs.amterLine[2].splice(0, 1)
+                    acs.amterLine[3].splice(0, 1)
                   }
-                  acs.refreshAmterLineKey = ttt.getTime()
-                  break
-                case '8':
-                  acs.power.ap = Number(dataList[i].split('_')[d])
-                  acs.powerLine[0].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '9':
-                  acs.power.rp = Number(dataList[i].split('_')[d])
-                  acs.powerLine[1].push(Number(dataList[i].split('_')[d]))
-                  break
-                case '10':
-                  acs.power.pf = Number(dataList[i].split('_')[d])
-                  acs.powerLine[2].push(`${hour}:${min}`)
-                  for (const i in acs.canBeClickedItem) {
-                    if (acs.currentItem === acs.canBeClickedItem[i]) {
-                      acs.power.max = acs.power.pf * acs.itemPower[i]
-                      break
-                    }
+                }
+                acs.refreshAmterLineKey = ttt.getTime()
+                break
+              case '8':
+                acs.power.ap = Number(dataList[d])
+                acs.powerLine[0].push(Number(dataList[d]))
+                break
+              case '9':
+                acs.power.rp = Number(dataList[d])
+                acs.powerLine[1].push(Number(dataList[d]))
+                break
+              case '10':
+                acs.power.pf = Number(dataList[d])
+                acs.powerLine[2].push(`${hour}:${min}`)
+                for (const i in acs.canBeClickedItem) {
+                  if (acs.currentItem === acs.canBeClickedItem[i]) {
+                    acs.power.max = acs.power.pf * acs.itemPower[i]
+                    break
                   }
-                  if(acs.powerLine[2].length > 600){
-                    const startTime = getTimestamp(acs.powerLine[2][0])
-                    const endTime = getTimestamp(acs.powerLine[2][acs.powerLine[2].length - 1])
-                    if (endTime-startTime > 1800000){
-                      acs.powerLine[0].splice(0, 1)
-                      acs.powerLine[1].splice(0, 1)
-                      acs.powerLine[2].splice(0, 1)
-                    }
+                }
+                if (acs.powerLine[2].length > 600) {
+                  const startTime = getTimestamp(acs.powerLine[2][0])
+                  const endTime = getTimestamp(acs.powerLine[2][acs.powerLine[2].length - 1])
+                  if (endTime - startTime > 1800000) {
+                    acs.powerLine[0].splice(0, 1)
+                    acs.powerLine[1].splice(0, 1)
+                    acs.powerLine[2].splice(0, 1)
                   }
-                  acs.power.refreshKey = new Date().getTime()
-                  break
-                case '11':
-                  acs.EC = Number(dataList[i].split('_')[d])
-                default:
-              }
+                }
+                acs.power.refreshKey = new Date().getTime()
+                break
+              case '11':
+                acs.EC = Number(dataList[d])
+              default:
             }
           }
         }

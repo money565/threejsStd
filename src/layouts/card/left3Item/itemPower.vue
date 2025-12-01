@@ -81,7 +81,7 @@ const option = computed<any>(() => {
           scaleSize: 10,
           label: {
             show: true,
-            formatter: (params: { name: string }) => (params.name === '负载' ? `${acs.power.ap + acs.power.rp}W` : `${acs.power.max - (acs.power.ap + acs.power.rp)}W`),
+            formatter: (params: { name: string }) => (params.name === '负载' ? `${((acs.power.ap + acs.power.rp) / 1000).toFixed(1)}KW` : `${((acs.power.max - (acs.power.ap + acs.power.rp)) / 1000).toFixed(1)}KW`),
             valueFormatter: (value: number) => value.toFixed(1),
           },
           // 启用鼠标放上去放大效果，这个挺好的
@@ -104,7 +104,7 @@ const option = computed<any>(() => {
         label: {
           show: true, // false不显示饼图上的标签
           position: 'center', // inside（在饼图上显示）,outside(默认就会出现引导线) center
-          formatter: '{c}W',
+          formatter: `${(acs.power.ap / 1000).toFixed(1)}KW`,
           fontSize: 30,
           fontWeight: 'bold',
           color: '#BBFFFF',
@@ -122,7 +122,7 @@ const option = computed<any>(() => {
             show: true,
             position: 'right',
             color: '#FFFFFF',
-            formatter: (params: { name: string }) => (params.name === '有功' ? `有功${acs.power.ap.toFixed(1)}W` : `无功${acs.power.rp.toFixed(1)}W`),
+            formatter: (params: { name: string }) => (params.name === '有功' ? `有功${(acs.power.ap / 1000).toFixed(1)}KW` : `无功${(acs.power.rp / 1000).toFixed(1)}KW`),
           },
           // 启用鼠标放上去放大效果，这个挺好的
           itemStyle: {

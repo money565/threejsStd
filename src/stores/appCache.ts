@@ -66,6 +66,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const amterLine = ref<[number[], number[], number[], number[], string[]]>([[], [], [], [], []])
   const powerLine = ref<[number[], number[], string[]]>([[], [], []])
   const EC = ref<number>(0) // ElectricityConsumption 总用电量
+  const dataRefreshTime = ref()
 
   const allOverView = ref(true) // 总览所有数据
 
@@ -220,5 +221,6 @@ export const useAppCacheStore = defineStore('appCache', () => {
     powerCurrentPercentShow,
     powerCurrentValueShow,
     powerMaxShow,
+    dataRefreshTime,
   }
 })

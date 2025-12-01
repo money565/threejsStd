@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAppCacheStore } from '@/stores/appCache'
+
 interface IProps {
   showPanel: boolean
 }
@@ -19,7 +21,7 @@ const songs: Song[] = [
   { name: '歌曲4', url: '/public/4.mp3' },
   { name: '歌曲5', url: '/public/5.mp3' },
 ]
-
+const acs = useAppCacheStore()
 const audio = ref<HTMLAudioElement | null>(null)
 const currentSongIndex = ref(0)
 const isPlaying = ref(true)
@@ -87,6 +89,11 @@ function playNextSong() {
     playCurrentSong()
   }
 }
+
+const nowTime = computed(() => {
+  const date = new Date(acs.readData.refresh)
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+})
 </script>
 
 <template>
@@ -113,6 +120,9 @@ function playNextSong() {
           <el-icon size="20">
             <SvgIcon name="next" @click="playNextSong" />
           </el-icon>
+        </div>
+        <div class="flex justify-center items-center mb-1">
+          数据更新时间：{{ nowTime }}
         </div>
       </div>
     </div>
