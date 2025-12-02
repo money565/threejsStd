@@ -53,6 +53,8 @@
   "pnpm": {
     "ignoredBuiltDependencies": [
       "core-js",
+      "electron",
+      "electron-winstaller",
       "esbuild",
       "vue-demi"
     ],

@@ -98,6 +98,7 @@ onMounted(() => {
   if (rightPanelRef.value) {
     rightPanelRef.value.style.transform = `translateX(${Number.parseInt(panelWidthRight)}px)`
   }
+  acs.refreshSpotChecked()
 })
 
 // 组件卸载时断开连接

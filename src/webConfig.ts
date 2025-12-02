@@ -1,5 +1,5 @@
 export const loginURL: string = 'https://www.cdxcwy.cn/intelTools'
-export const baseURL: string = 'https://www.cdxcwy.cn/spotCheck'
+export const baseURL: string = 'http://118.24.54.200:8080/spotCheck'
 export const HWURL: string = 'http://124.71.148.182:8080/magicTools'
 export const ddingUrl: string = 'api.dingtalk.com'
 export const whiteList: string[] = ['https://www.cdxcwy.cn/']

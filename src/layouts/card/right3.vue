@@ -1,148 +1,119 @@
 <script setup lang="ts">
-// 原始字符数组
-const chars = [
-  '10:28分xxx对1t进行了手机巡检，结果为正常', 
-  '10:38分xxx对2t进行了手机巡检，结果为正常', 
-  '11:38分xxx对3t进行了手机巡检，结果为正常', 
-  '12:11分xxx对3t进行了手机巡检，结果为正常', 
-  '13:22分xxx对3t进行了手机巡检，结果为正常', 
-  '13:23分xxx对3t进行了手机巡检，结果为正常',  
-  '14:32分xxx对3t进行了手机巡检，结果为正常',  
-  '14:38分xxx对3t进行了手机巡检，结果为正常',  
-  '16:17分xxx对3t进行了手机巡检，结果为正常',  
-  '16:23分xxx对3t进行了手机巡检，结果为正常',  
-  '17:32分xxx对3t进行了手机巡检，结果为正常',  
-  '17:23分xxx对3t进行了手机巡检，结果为正常',  
-  '18:31分xxx对3t进行了手机巡检，结果为正常',  
-  '18:56分xxx对3t进行了手机巡检，结果为正常', 
-]
+import { useAppCacheStore } from '@/stores/appCache'
+import { ElScrollbar } from 'element-plus'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-// 渲染数组：如果内容超出，复制一份用于首尾衔接
-const fullList = ref<string[]>([])
+const acs = useAppCacheStore()
 
-// 单个 item 高度，单位 px（需与 CSS 一致）
-const itemHeight = 32
-const totalItems = chars.length
+// 响应式数据
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
+const contentListRef = ref<HTMLDivElement>()
+const scrollSpeed = ref<number>(1)
+const isPaused = ref<boolean>(false)
+const scrollPosition = ref<number>(0)
 
-// DOM refs
-const scrollRef = ref<HTMLElement | null>(null)
-const containerRef = ref<HTMLElement | null>(null)
+// 容器尺寸
+const containerHeight = '400px'
 
-// 状态控制
-const translateY = ref(0)
-const isTransitioning = ref(true)
-const enableScroll = ref(false)
+// 计算要显示的项目（双倍内容以实现无缝滚动）
+const displayedItems = computed(() => {
+  return [...acs.checkResult, ...acs.checkResult]
+})
 
-let intervalId: any = null
-let scrollResumeTimer: any = null
+// 滚动动画
+let animationFrameId: number | null = null
+let lastTimestamp: number | null = null
 
-function startScrolling() {
-  intervalId = setInterval(() => {
-    if (!enableScroll.value)
-      return
-
-    isTransitioning.value = true
-    translateY.value += itemHeight
-
-    if (translateY.value >= totalItems * itemHeight) {
-      // 重置滚动
-      setTimeout(() => {
-        isTransitioning.value = false
-        translateY.value = 0
-      }, 500)
-    }
-  }, 1500)
-}
-
-function stopScrolling() {
-  if (intervalId) {
-    clearInterval(intervalId)
-    intervalId = null
-  }
-}
-
-function onWheel(e: WheelEvent) {
-  if (!enableScroll.value)
+function scrollContent(timestamp: number) {
+  if (!scrollbarRef.value || !contentListRef.value || isPaused.value) {
+    animationFrameId = requestAnimationFrame(scrollContent)
     return
-
-  e.preventDefault()
-  stopScrolling()
-
-  if (e.deltaY > 0) {
-    manualScrollDown()
-  }
-  else {
-    manualScrollUp()
   }
 
-  // 3 秒后恢复自动滚动
-  if (scrollResumeTimer)
-    clearTimeout(scrollResumeTimer)
-  scrollResumeTimer = setTimeout(startScrolling, 3000)
+  if (!lastTimestamp) {
+    lastTimestamp = timestamp
+  }
+
+  const deltaTime = timestamp - lastTimestamp
+  lastTimestamp = timestamp
+
+  // 计算滚动距离（基于速度）
+  const scrollAmount = (scrollSpeed.value * deltaTime) / 80
+
+  // 更新滚动位置
+  scrollPosition.value += scrollAmount
+
+  const scrollContainer = scrollbarRef.value
+  const scrollContentEl = contentListRef.value
+
+  // 获取实际内容高度
+  const contentHeight = scrollContentEl.scrollHeight / 2 // 因为我们是双倍内容
+
+  // 如果滚动到一半（原始内容高度），则重置位置以实现无缝滚动
+  if (scrollPosition.value >= contentHeight) {
+    scrollPosition.value = 0
+  }
+
+  // 设置滚动位置
+  if (scrollContainer && scrollContainer.setScrollTop) {
+    scrollContainer.setScrollTop(scrollPosition.value)
+  }
+
+  animationFrameId = requestAnimationFrame(scrollContent)
 }
 
-function manualScrollDown() {
-  isTransitioning.value = true
-  translateY.value += itemHeight
-
-  if (translateY.value >= totalItems * itemHeight) {
-    setTimeout(() => {
-      isTransitioning.value = false
-      translateY.value = 0
-    }, 500)
+// 开始滚动
+function startScrolling() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId)
   }
+  lastTimestamp = null
+  animationFrameId = requestAnimationFrame(scrollContent)
 }
 
-function manualScrollUp() {
-  if (translateY.value === 0) {
-    // 切到复制段尾部后回滚
-    isTransitioning.value = false
-    translateY.value = totalItems * itemHeight
-    setTimeout(() => {
-      isTransitioning.value = true
-      translateY.value -= itemHeight
-    }, 20)
-  }
-  else {
-    isTransitioning.value = true
-    translateY.value -= itemHeight
-  }
-}
-
-onMounted(() => {
-  const container = containerRef.value
-  const needsScroll = chars.length * itemHeight > (container?.clientHeight || 0)
-
-  enableScroll.value = needsScroll
-  fullList.value = needsScroll ? [...chars, ...chars] : [...chars]
-
-  if (needsScroll)
+// 切换暂停/继续
+function togglePause() {
+  console.log('暂停')
+  isPaused.value = !isPaused.value
+  if (!isPaused.value) {
     startScrolling()
+  }
+}
+
+// 生命周期
+onMounted(() => {
+  startScrolling()
+})
+
+onUnmounted(() => {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId)
+  }
 })
 </script>
 
 <template>
-  <div
-    ref="containerRef"
-    class="relative overflow-hidden h-80 w-95% border border-gray-300 rounded ml-2"
-    @wheel.prevent="onWheel"
-  >
-    <div
-      ref="scrollRef"
-      class="absolute left-0 w-full flex flex-col items-center"
-      :style="{
-        transform: `translateY(-${translateY}px)`,
-        transition: isTransitioning ? 'transform 0.5s linear' : 'none',
-      }"
-    >
-      <div
-        v-for="(char, i) in fullList"
-        :key="i"
-        style="color: #FFFAFA"
-        class=" flex text-left "
+  <div class="container pl-2 pr-2 text-light-50" @mouseenter="togglePause" @mouseleave="togglePause">
+    <div class="scroll-container">
+      <ElScrollbar
+        ref="scrollbarRef"
+        :height="containerHeight"
+        :always="true"
       >
-        {{ char }}
-      </div>
+        <div ref="contentListRef" class="content-list">
+          <div
+            v-for="(item, index) in displayedItems"
+            :key="index"
+            class="content-item"
+          >
+            {{ item }}
+          </div>
+        </div>
+      </ElScrollbar>
     </div>
   </div>
 </template>
+
+<style scoped>
+
+</style>

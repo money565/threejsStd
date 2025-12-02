@@ -23,9 +23,9 @@ const option = computed<echarts.EChartsOption>(() => {
         startAngle: 180,
         endAngle: 90,
         min: 0,
-        max: 15,
-        center: ['93%', '60%'],
-        radius: '150%',
+        max: 2700,
+        center: ['92%', '70%'],
+        radius: '180%',
         splitNumber: 3,
         itemStyle: {
           color: '#58D9F9',

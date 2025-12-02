@@ -1,3 +1,4 @@
+import { getEngSpotChecks } from '@/axios/interface'
 import { defineStore } from 'pinia'
 
 interface projectListOpt {
@@ -192,6 +193,27 @@ export const useAppCacheStore = defineStore('appCache', () => {
     volume: 50,
     brightness: 10,
   })
+
+  const checkResult = ref<string[]>([])
+  function refreshSpotChecked() {
+    const temp: string[] = []
+    getEngSpotChecks().then(({ data: res }) => {
+      for (const i in res.result) {
+        temp.push(`${res.result[i].ct}:${res.result[i].cr}巡检${res.result[i].obj},结果为${res.result[i].result}`)
+      }
+      checkResult.value = temp
+    })
+
+    setInterval(() => {
+      getEngSpotChecks().then(({ data: res }) => {
+        for (const i in res.result) {
+          temp.push(`${res.result[i].ct}:${res.result[i].cr}巡检${res.result[i].obj},结果为${res.result[i].result}`)
+        }
+        checkResult.value = temp
+      })
+    }, 10 * 60 * 1000)
+  }
+
   return {
     currentProject,
     projectList,
@@ -222,5 +244,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
     powerCurrentValueShow,
     powerMaxShow,
     dataRefreshTime,
+    refreshSpotChecked,
+    checkResult,
   }
 })

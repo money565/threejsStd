@@ -78,16 +78,7 @@ export function connMqtt() {
           acs.volteLine[1] = msg.data[1]
           acs.volteLine[2] = msg.data[2]
           acs.volteLine[3] = msg.data[3]
-          const temp = []
-          const dn = msg.data[0].length
-          const TimeRange = Number(msg.TR[1]) - Number(msg.TR[0])
-          for (let i = 0; i <= dn; i++) {
-            const d = new Date(Math.ceil(Number(msg.TR[0]) + i * (TimeRange / dn)) * 1000)
-            const hour = d.getHours()
-            const min = d.getMinutes()
-            temp.push(`${hour}:${min}`)
-          }
-          acs.volteLine[4] = temp
+          acs.volteLine[4] = msg.x_time
           acs.refreshKey = new Date().getTime()
         }
         if (msg.target === 'amtLine') {
@@ -95,30 +86,12 @@ export function connMqtt() {
           acs.amterLine[1] = msg.data[1]
           acs.amterLine[2] = msg.data[2]
           acs.amterLine[3] = msg.data[3]
-          const temp = []
-          const dn = msg.data[0].length
-          const TimeRange = Number(msg.TR[1]) - Number(msg.TR[0])
-          for (let i = 0; i <= dn; i++) {
-            const d = new Date(Math.ceil(Number(msg.TR[0]) + i * (TimeRange / dn)) * 1000)
-            const hour = d.getHours()
-            const min = d.getMinutes()
-            temp.push(`${hour}:${min}`)
-          }
-          acs.amterLine[4] = temp
+          acs.amterLine[4] = msg.x_time
           acs.refreshAmterLineKey = new Date().getTime()
         }
         if (msg.target === 'powerLine') {
-          const temp = []
-          const dn = msg.data[0].length
-          const TimeRange = Number(msg.TR[1]) - Number(msg.TR[0])
           acs.powerLine = msg.data
-          for (let i = 0; i <= dn; i++) {
-            const d = new Date(Math.ceil(Number(msg.TR[0]) + i * (TimeRange / dn)) * 1000)
-            const hour = d.getHours()
-            const min = d.getMinutes()
-            temp.push(`${hour}:${min}`)
-          }
-          acs.powerLine[2] = temp
+          acs.powerLine[2] = msg.x_time
           acs.power.refreshKey = new Date().getTime()
         }
         if (msg.target === 'init') {
