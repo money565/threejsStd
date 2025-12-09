@@ -44,7 +44,7 @@ watch(() => ac.currentItem, () => {
 
     <!-- 内容 -->
     <div class="z-10 h-100% w-100% flex flex-col bg-blue-500 bg-opacity-30">
-      <div class="w-100% h-10  block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+      <div class="w-100% h-10  pt-2 block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
         {{ ac.currentItem }}电压
       </div>
       <div class=" bg-blue-100 w-8 ml-115 mt-2 shadow" @click.prevent="linSwitch">

@@ -189,6 +189,7 @@ export function deleteSelect() {
     }
     objects = []
     lines = []
+    acs.currentLabel = undefined
   }
 }
 

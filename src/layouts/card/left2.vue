@@ -49,7 +49,7 @@ watch(() => ac.currentItem, () => {
 
     <!-- 内容 -->
     <div class="relative z-10 h-full w-full flex flex-col bg-blue-500 bg-opacity-30">
-      <div class="w-100% h-10 flex  block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+      <div class="w-100% h-10 pt-2 flex  block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
         <div class="mb-5">
           {{ ac.currentItem }}电流
         </div>

@@ -49,6 +49,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const refreshKey = ref(0)
   const refreshAmterLineKey = ref(0)
   const refreshPowerLineKey = ref(0)
+  const refreshTempLineKey = ref(0)
   const mqttClient = ref()
   const currentProject = ref<number>()
   const currentItem = ref<string>('-')
@@ -57,14 +58,18 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const ItemOnline = ref()
   const projectList = ref<projectListOpt[]>([])
   const itemPF = ref(0)
+  const currentLabel = ref()
   const readData = ref({
     item: '',
     refresh: 0,
   })
   const temperature = ref<number | string>('-')
   const humidity = ref<number | string>('-')
+  const cabinetTemperature = ref<number | string>('-')
+  const deviceTemperature = ref<number | string>('-')
   const volteLine = ref<[number[], number[], number[], number[], string[]]>([[], [], [], [], []])
   const amterLine = ref<[number[], number[], number[], number[], string[]]>([[], [], [], [], []])
+  const tempLine = ref<[number[], number[], number[], number[], string[]]>([[], [], [], [], []])
   const powerLine = ref<[number[], number[], string[]]>([[], [], []])
   const EC = ref<number>(0) // ElectricityConsumption 总用电量
   const dataRefreshTime = ref()
@@ -73,7 +78,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
 
   const allItemDatas = ref<allItemDatasOpt>({
     refresh: 0,
-    vol: [0, 0, 0, 0, 0, 0, 0, 200],
+    vol: [0, 0, 0, 0, 0, 0, 0, 0],
     amt: {
       max: [0, 0, 0, 0, 0, 0, 0, 0],
       cur: [0, 0, 0, 0, 0, 0, 0, 0],
@@ -177,14 +182,18 @@ export const useAppCacheStore = defineStore('appCache', () => {
       pf: 0,
       refreshKey: 0,
     }
-    temperature.value = '-'
+    // temperature.value = '-'
     humidity.value = '-'
     volteLine.value = [[], [], [], [], []]
     amterLine.value = [[], [], [], [], []]
+    tempLine.value = [[], [], [], [], []]
     powerLine.value = [[], [], []]
+    cabinetTemperature.value = '-'
+    deviceTemperature.value = '-'
     refreshKey.value = 0
     refreshAmterLineKey.value = 0
     refreshPowerLineKey.value = 0
+    refreshTempLineKey.value = 0
     EC.value = 0
   }
 
@@ -246,5 +255,10 @@ export const useAppCacheStore = defineStore('appCache', () => {
     dataRefreshTime,
     refreshSpotChecked,
     checkResult,
+    currentLabel,
+    cabinetTemperature,
+    deviceTemperature,
+    tempLine,
+    refreshTempLineKey,
   }
 })

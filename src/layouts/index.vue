@@ -27,7 +27,7 @@ const rightButtonRef = ref<HTMLElement | null>(null)
 
 // 面板宽度
 const panelWidthLeft = '500px'
-const panelWidthRight = '300px'
+const panelWidthRight = '400px'
 
 // 左侧面板计算
 const leftPanelOffset = computed(() => {

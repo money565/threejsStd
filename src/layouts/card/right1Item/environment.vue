@@ -60,7 +60,7 @@ function updateChart() {
       label: {
         show: props.showLabel,
         position: ['50%', '50%'],
-        formatter: `${acs.humidity}°C`,
+        formatter: `${acs.humidity}%`,
         fontSize: 30,
         color: '#7FFF00',
         fontWeight: 'bold',

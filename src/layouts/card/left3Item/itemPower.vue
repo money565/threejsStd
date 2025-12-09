@@ -65,12 +65,12 @@ const option = computed<any>(() => {
 
         data: [
           {
-            value: acs.power.ap + acs.power.rp,
+            value: ((acs.power.ap + acs.power.rp) / 1000).toFixed(0),
             name: '负载',
             itemStyle: { color: innerRingColor, opacity: 1 },
           },
           {
-            value: acs.power.max - (acs.power.ap + acs.power.rp),
+            value: ((acs.power.max - (acs.power.ap + acs.power.rp)) / 1000).toFixed(0),
             name: '空载',
             itemStyle: { color: 'rgba(255, 255, 255, 0.2)' },
           },

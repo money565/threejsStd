@@ -37,6 +37,8 @@ export function connMqtt() {
         const msg = JSON.parse(message.toString())
         if (msg.target === 'allInit') {
           console.log('allInit', msg)
+          acs.humidity = msg.env[1]
+          acs.temperature = msg.env[0]
           const vol = []
           const amt_m = []
           const amt_c = []
@@ -49,7 +51,7 @@ export function connMqtt() {
               amt_c.push(Number(msg.data[i].data.amt))
               amt_d.push(Number(msg.data[i].data.max) - Number(msg.data[i].data.amt))
               pw.push({
-                currentLoad: Math.ceil(Number(msg.data[i].data.pw)),
+                currentLoad: Math.ceil(Number(msg.data[i].data.pw)) / 1000,
                 maxLoad: Math.floor(acs.itemPower[Number(i)] * Number(msg.data[i].data.pf)),
                 pf: Number(msg.data[i].data.pf),
               })
@@ -94,6 +96,15 @@ export function connMqtt() {
           acs.powerLine[2] = msg.x_time
           acs.power.refreshKey = new Date().getTime()
         }
+        if (msg.target === 'tempLine') {
+          console.log('tempLine', msg.data)
+          acs.tempLine[0] = msg.data[0]
+          acs.tempLine[1] = msg.data[1]
+          acs.tempLine[2] = msg.data[2]
+          acs.tempLine[3] = msg.data[3]
+          acs.tempLine[4] = msg.x_time
+          acs.refreshTempLineKey = new Date().getTime()
+        }
         if (msg.target === 'init') {
           console.log('init', msg.data)
           const res = String(msg.data).split('&')
@@ -110,8 +121,8 @@ export function connMqtt() {
           acs.power.ap = Number(vol_res[8])
           acs.power.rp = Number(vol_res[9])
           acs.power.pf = Number(vol_res[10])
-          acs.temperature = Number(temp_res[0])
-          acs.humidity = Number(temp_res[1])
+          acs.cabinetTemperature = Number(temp_res[0])
+          acs.deviceTemperature = Number(temp_res[1])
           for (const i in acs.canBeClickedItem) {
             if (acs.currentItem === acs.canBeClickedItem[i]) {
               acs.power.max = acs.power.pf * acs.itemPower[i]
@@ -123,17 +134,31 @@ export function connMqtt() {
 
         if (msg.target === 'data') {
           console.log('data', msg.data)
-          const datas = String(msg.data)
-          acs.readData.item = msg.item
-          acs.readData.refresh = new Date().getTime()
-          if (datas.includes('&')) {
-            acs.temperature = Number(datas.split('&')[1].split('_')[0])
-            acs.humidity = Number(datas.split('&')[1].split('_')[1])
-          }
-          const dataList = datas.split('&')[0].split('_')
           const ttt = new Date()
           const hour = ttt.getHours()
           const min = ttt.getMinutes()
+          const datas = String(msg.data)
+          acs.readData.item = msg.item
+          acs.readData.refresh = new Date().getTime()
+          const dataList = datas.split('&')[0].split('_')
+          const tempList = datas.split('&')[1].split('_')
+          acs.deviceTemperature = Number(tempList[1])
+          acs.cabinetTemperature = Number(tempList[0])
+          acs.tempLine[1].push(Number(tempList[0]))
+          acs.tempLine[2].push(Number(tempList[1]))
+          acs.tempLine[0].push(Number(tempList[2]))
+          acs.tempLine[4].push(`${hour}:${min}`)
+          if (acs.volteLine[4].length > 600) {
+            const startTime = getTimestamp(acs.volteLine[4][0])
+            const endTime = getTimestamp(acs.volteLine[4][acs.volteLine[4].length - 1])
+            if (endTime - startTime > 1800000) {
+              acs.tempLine[4].splice(0, 1)
+              acs.tempLine[0].splice(0, 1)
+              acs.tempLine[1].splice(0, 1)
+              acs.tempLine[2].splice(0, 1)
+              acs.tempLine[3].splice(0, 1)
+            }
+          }
           for (let d = 0; d <= 10; d++) {
             switch (String(d)) {
               case '0':

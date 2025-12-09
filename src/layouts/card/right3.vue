@@ -73,7 +73,6 @@ function startScrolling() {
 
 // 切换暂停/继续
 function togglePause() {
-  console.log('暂停')
   isPaused.value = !isPaused.value
   if (!isPaused.value) {
     startScrolling()

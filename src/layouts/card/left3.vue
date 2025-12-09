@@ -42,7 +42,7 @@ watch(() => acs.currentItem, () => {
 
     <!-- 边缘高光线 -->
     <div class="absolute inset-0 rounded-lg border border-cyan-400/20 pointer-events-none" />
-    <div class="w-100% h-10  block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+    <div class="w-100% h-10 pt-2 pb--2 block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
       功率
     </div>
 

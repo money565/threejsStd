@@ -2,223 +2,164 @@
 import { useAppCacheStore } from '@/stores/appCache'
 import * as echarts from 'echarts'
 
+interface Props {
+  size?: number // 图表大小（像素）
+  colors?: string[] // 水球颜色
+  showLabel?: boolean // 是否显示百分比标签
+}
+const props = withDefaults(defineProps<Props>(), {
+  size: 480,
+  colors: () => ['#294D99', '#156ACF', '#1598F2'],
+  showLabel: true,
+})
 const acs = useAppCacheStore()
 // 定义图表 DOM 引用
 const chartRef = ref<HTMLElement | null>(null)
 // 定义图表实例
 let chartInstance: echarts.ECharts | null = null
-
-const xData2 = acs.canBeClickedItem
-// const data1 = [0.02, 0.05, 0.12, 0.08, 0.12, 0.1, 0.19, 0.12]
-// const data2 = [0.08, 0.15, 0.18, 0.02, 0.08, 0.1, 0.01, 0.18]
-// const data3 = [0.1, 0.2, 0.3, 0.1, 0.2, 0.2, 0.2, 0.3]
-const bottomCircle = computed(() => {
-  const temp = []
-  for (let i = 0; i < acs.canBeClickedItem.length; i++) {
-    temp.push(1)
-  }
-  return temp
-})
-const barTopColor = [
-  '#149575',
-  '#AE790C',
-  '#0E86B1',
-  '#4572BA',
-  '#30B1AE',
-  '#53e568',
-  '#02c3f1',
-  '#53e568',
-]
-const barBottomColor = [
-  '#33C09D',
-  '#F8B82F',
-  '#3ED0F2',
-  '#74A7F5',
-  '#74F4E7',
-  '#53e568',
-  '#02c3f1',
-  '#53e568',
+const colors = [
+  ['#FF6B6B', '#FF8E53'],
+  ['#4ECDC4', '#44A08D'],
+  ['#C7F464', '#4ECDC4'],
+  ['#FFD166', '#FFA166'],
 ]
 const option = ref({
-  tooltip: {
-    valueFormatter: (value: number) => value.toFixed(2),
-    trigger: 'item',
-  },
   grid: {
-    left: 40,
-    bottom: 30,
-    top: 40,
-    right: 10,
+    left: '0%', // 距离容器左侧的距离
+    right: '0%', // 距离容器右侧的距离
+    top: '15%', // 距离容器顶部的距离
+    bottom: '0%', // 距离容器底部的距离
+    containLabel: true, // 是否包含坐标轴的标签
+  },
+  tooltip: {
+    trigger: 'axis',
   },
   xAxis: {
-    data: xData2,
-    axisTick: {
-      show: false,
+    type: 'category',
+    data: acs.canBeClickedItem,
+    axisLabel: {
+      show: true,
+      color: '#ffffff', // 只显示标签文字
     },
     axisLine: {
-      show: false,
+      show: false, // 隐藏X轴线
     },
-    axisLabel: {
-      interval: 0,
-      textStyle: {
-        color: '#fff',
-        fontSize: 12,
-      },
-      margin: 10, // 刻度标签与轴线之间的距离。
+    axisTick: {
+      show: false, // 隐藏X轴刻度
+    },
+    splitLine: {
+      show: false, // 隐藏网格线
     },
   },
   yAxis: {
-    splitLine: {
+    type: 'value',
+    show: false, // 完全隐藏Y轴
+    axisLine: {
       show: false,
     },
     axisTick: {
       show: false,
     },
-    axisLine: {
+    axisLabel: {
       show: false,
     },
-    axisLabel: {
-      textStyle: {
-        color: '#fff',
-        fontSize: 12,
-      },
+    splitLine: {
+      show: false,
     },
   },
   series: [
     {
-      // 三个最低下的圆片
-      name: '',
-      type: 'pictorialBar',
-      symbolSize: [30, 10],
-      symbolOffset: [0, 6],
-      z: 20,
-      itemStyle: {
-        opacity: 1,
-        color(params: { dataIndex: number }) {
-          return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 1,
-              color: barTopColor[params.dataIndex],
-            },
-            {
-              offset: 0,
-              color: barBottomColor[params.dataIndex],
-            },
-          ])
-        },
-      },
-      data: bottomCircle,
-    },
-
-    // 下半截柱状图 //series[1].data = acs.allItemDatas.amt.cur
-    {
-      name: '当前',
+      name: '最大值',
+      data: acs.allItemDatas.amt.max,
       type: 'bar',
-      barWidth: 30,
-      barGap: '-100%',
+      barGap: '-100%', // 关键：让这个系列覆盖在其他系列上
+      z: 1,
+      barWidth: '50%',
       itemStyle: {
-        // lenged文本
-        opacity: 0.9,
-        color(params: { dataIndex: number }) {
-          return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
+        color() {
+        // 为每个柱子创建不同的渐变
+          return {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0, // 水平渐变
+            colorStops: [{
               offset: 0,
-              color: barTopColor[params.dataIndex],
-            },
-            {
+              color: colors[0][0],
+            }, {
               offset: 1,
-              color: barBottomColor[params.dataIndex],
-            },
-          ])
+              color: colors[0][1],
+            }],
+          }
         },
+        shadowColor: 'rgba(0, 0, 0, 0.3)',
+        shadowBlur: 12,
+        shadowOffsetX: 3, // 横向阴影，模拟3D效果
+        shadowOffsetY: 3,
+        borderRadius: [3, 3, 0, 0],
       },
-      label: {
-        show: true,
-        position: 'top',
-        fontSize: 14,
-        color: '#fff', // 柱状顶部文字颜色
-        // formatter(params) {
-        //   // return '20%';
-        // },
-      },
-      data: acs.allItemDatas.amt.cur, // data1,
     },
-    // series[2].data = acs.allItemDatas.amt.cur
     {
-      // 替代柱状图 默认不显示颜色，是最下方柱图（邮件营销）的value值 - 20
+      name: '当前值',
+      // 生成随机数据，范围在30-100之间
+      data: acs.allItemDatas.amt.cur,
       type: 'bar',
-      barWidth: 30,
-      barGap: '-100%',
-      stack: '广告',
-      itemStyle: {
-        color: 'transparent',
-      },
-      data: acs.allItemDatas.amt.cur, // data1,
-    },
-    // series[3].data = acs.allItemDatas.amt.max
-    {
-      name: '', // 头部
-      type: 'pictorialBar',
-      symbolSize: [30, 10],
-      symbolOffset: [0, -6],
-      z: 12,
-      symbolPosition: 'end',
-      itemStyle: {
-        color(params: { dataIndex: number }) {
-          return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 1,
-              color: barTopColor[params.dataIndex],
-            },
-            {
-              offset: 0,
-              color: barBottomColor[params.dataIndex],
-            },
-          ])
-        },
-        opacity: 0.8,
-      },
-      data: acs.allItemDatas.amt.max, // data3,
-    },
-    // series[4].data = acs.allItemDatas.amt.cur
-    {
-      name: '',
-      type: 'pictorialBar',
-      symbolSize: [30, 10],
-      symbolOffset: [0, -6],
-      z: 12,
-      itemStyle: {
-        opacity: 1,
-        color(params: { dataIndex: number }) {
-          return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 1,
-              color: barTopColor[params.dataIndex],
-            },
-            {
-              offset: 0,
-              color: barBottomColor[params.dataIndex],
-            },
-          ])
-        },
-      },
-      symbolPosition: 'end',
-      data: acs.allItemDatas.amt.cur, // data1,
-    },
-    // series[5].data = acs.allItemDatas.amt.dif
-    {
-      name: '日最大峰值',
-      type: 'bar',
-      barWidth: 30,
       z: 2,
-      barGap: '-100%',
-      stack: '广告',
-      data: acs.allItemDatas.amt.dif, // data2,
+      barWidth: '50%',
       itemStyle: {
-        color(params: { dataIndex: number }) {
-          return barTopColor[params.dataIndex]
+        color() {
+        // 为每个柱子创建不同的渐变
+          return {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0, // 水平渐变
+            colorStops: [{
+              offset: 0,
+              color: colors[3][0],
+            }, {
+              offset: 1,
+              color: colors[3][1],
+            }],
+          }
         },
-        opacity: 0.5,
+        shadowColor: 'rgba(100, 100, 100, 0.3)',
+        shadowBlur: 12,
+        shadowOffsetX: 2, // 横向阴影，模拟3D效果
+        shadowOffsetY: 0,
+      },
+    },
+    {
+      name: '差值',
+      // 生成随机数据，范围在30-100之间
+      data: acs.allItemDatas.amt.dif,
+      type: 'bar',
+      z: 3,
+      barWidth: '50%',
+      itemStyle: {
+        color() {
+        // 为每个柱子创建不同的渐变
+          return {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0, // 水平渐变
+            colorStops: [{
+              offset: 0,
+              color: colors[2][0],
+            }, {
+              offset: 1,
+              color: colors[2][1],
+            }],
+          }
+        },
+        shadowColor: 'rgba(0, 0, 0, 0.3)',
+        shadowBlur: 12,
+        shadowOffsetX: 2, // 横向阴影，模拟3D效果
+        shadowOffsetY: 0,
       },
     },
   ],
@@ -254,15 +195,21 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
 })
 watch(() => acs.allItemDatas.refresh, () => {
+  option.value.series[0].data = acs.allItemDatas.amt.max
   option.value.series[1].data = acs.allItemDatas.amt.cur
-  option.value.series[2].data = acs.allItemDatas.amt.cur
-  option.value.series[3].data = acs.allItemDatas.amt.max
-  option.value.series[4].data = acs.allItemDatas.amt.cur
-  option.value.series[5].data = acs.allItemDatas.amt.dif
+  option.value.series[2].data = acs.allItemDatas.amt.dif
   chartInstance!.setOption(option.value)
 })
 </script>
 
 <template>
-  <div ref="chartRef" class="w-100% h-60" />
+  <div ref="chartRef" class="water-ball-chart" />
 </template>
+
+<style scoped>
+.water-ball-chart {
+  width: v-bind('`${props.size}px`');
+  height: v-bind('`${props.size * 0.45}px`');
+  margin: 0 auto;
+}
+</style>

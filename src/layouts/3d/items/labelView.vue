@@ -64,6 +64,7 @@ function updatePosition() {
 }
 
 function labelClicked() {
+  acs.currentLabel = props.itemID
   emit('item-clicked', props.text)
 }
 
@@ -84,7 +85,20 @@ watch(() => acs.readData.refresh, () => {
 
 <template>
   <div>
-    <div ref="labelRef" class="css3d-label text-center justify-center items-center opacity-70" @click.prevent="labelClicked">
+    <div
+      ref="labelRef"
+      class="css3d-label
+
+    text-center
+    justify-center
+    items-center
+    opacity-70"
+      :class="{
+        'bg-red-300 border border-solid border-[#FF3030]': acs.currentLabel === props.itemID,
+        'bg-gradient-to-r from-[rgba(0,96,255,0.2)] to-[rgba(0,228,255,0.6)] border border-solid border-[#00F0FF]': acs.currentLabel !== props.itemID,
+      }"
+      @click.prevent="labelClicked"
+    >
       <div>
         {{ text }}
       </div>
@@ -108,8 +122,7 @@ watch(() => acs.readData.refresh, () => {
   height: 20px;
   color: white;
   font-size: 10px;
-  background: linear-gradient(90deg, rgba(0,96,255,0.2) 0%, rgba(0,228,255,0.6) 100%);
-  border: 1px solid #00F0FF;
+  /* border: 1px solid #00F0FF; */
   border-radius: 2px;
   box-shadow: 0 0 10px rgba(0,240,255,0.5);
   font-family: 'Orbitron', sans-serif;
