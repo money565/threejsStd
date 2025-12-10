@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
           result: {
             token: '123456789',
             userInfo: {
-              clientID: '025111',
+              clientID: `${Math.floor(100000 + Math.random() * 900000)}`,
               clientName: 'tanghui',
             },
           },

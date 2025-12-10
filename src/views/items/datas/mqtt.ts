@@ -142,6 +142,7 @@ export function connMqtt() {
           acs.tempLine[1].push(Number(tempList[0]))
           acs.tempLine[2].push(Number(tempList[1]))
           acs.tempLine[0].push(Number(tempList[2]))
+          acs.tempLine[3].push(Number(tempList[1]) - Number(tempList[0]))
           acs.tempLine[4].push(`${hour}:${min}`)
           if (acs.volteLine[4].length > 600) {
             const startTime = getTimestamp(acs.volteLine[4][0])
@@ -154,6 +155,7 @@ export function connMqtt() {
               acs.tempLine[3].splice(0, 1)
             }
           }
+          acs.refreshTempLineKey = new Date().getTime()
           for (let d = 0; d <= 10; d++) {
             switch (String(d)) {
               case '0':
