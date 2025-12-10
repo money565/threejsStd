@@ -36,7 +36,6 @@ export function connMqtt() {
       mqttValue.on('message', (topic, message) => {
         const msg = JSON.parse(message.toString())
         if (msg.target === 'allInit') {
-          console.log('allInit', msg)
           acs.humidity = msg.env[1]
           acs.temperature = msg.env[0]
           const vol = []
@@ -66,16 +65,13 @@ export function connMqtt() {
           }
         }
         if (msg.target === 'rd') {
-          console.log('rd', msg.item)
           acs.readData.item = msg.item
           acs.readData.refresh = new Date().getTime()
         }
         if (msg.target === 'online') {
-          console.log('online', msg)
           acs.ItemOnline = msg.data
         }
         if (msg.target === 'volLine') {
-          console.log('volLine', msg.data)
           acs.volteLine[0] = msg.data[0]
           acs.volteLine[1] = msg.data[1]
           acs.volteLine[2] = msg.data[2]
@@ -106,7 +102,6 @@ export function connMqtt() {
           acs.refreshTempLineKey = new Date().getTime()
         }
         if (msg.target === 'init') {
-          console.log('init', msg.data)
           const res = String(msg.data).split('&')
           const vol_res = res[0].split('_')
           const temp_res = res[1].split('_')

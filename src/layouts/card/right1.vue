@@ -13,13 +13,11 @@ const user = useUserStore()
 const templine = ref(false)
 
 function showData() {
-  console.log('查看温度曲线', templine.value)
   templine.value = !templine.value
   if (templine.value) {
     const now = Math.floor(new Date().getTime() / 1000)
     const tenMinutesAgo = now - 30 * 60
     const sendMesg = `${acs.currentItem}_tempLine_${now}_${tenMinutesAgo}`
-    console.log('发送消息', sendMesg)
     publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, sendMesg)
   }
 }
@@ -28,12 +26,11 @@ function right1Clicked() {
 
 }
 
-watch(()=>acs.currentItem,()=>{
+watch(() => acs.currentItem, () => {
   if (templine.value) {
     const now = Math.floor(new Date().getTime() / 1000)
     const tenMinutesAgo = now - 30 * 60
     const sendMesg = `${acs.currentItem}_tempLine_${now}_${tenMinutesAgo}`
-    console.log('发送消息', sendMesg)
     publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, sendMesg)
   }
 })

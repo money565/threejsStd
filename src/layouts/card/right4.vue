@@ -8,7 +8,6 @@ const itemParams = ref<{ name: string, params: { label: string, value: string }[
 
 watch(() => acs.currentItem, (n) => {
   getSpotObjectByIntelName(n).then(({ data: res }) => {
-    console.log(res)
     itemParams.value = res.result
   })
 })

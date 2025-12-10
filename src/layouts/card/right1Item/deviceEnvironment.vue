@@ -155,31 +155,7 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
   chart!.on('click', (params) => {
     if (params.componentType === 'series' && params.seriesType === 'bar') {
-      const a1 = params.name
-      const a2 = params.value
-      const a3 = params.dataIndex
-
-      // 根据月份执行不同操作
-      switch (a1) {
-        case '环境':
-          console.log(a1, a2, a3)
-          emits('showData')
-          break
-        case '柜':
-          console.log(a1, a2, a3)
-          emits('showData')
-          break
-        case '设备':
-          console.log(a1, a2, a3)
-          emits('showData')
-          break
-        case '差值':
-          console.log(a1, a2, a3)
-          emits('showData')
-          break
-        default:
-          break
-      }
+      emits('showData')
     }
   })
 })

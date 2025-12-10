@@ -131,7 +131,6 @@ function mouseRelax(event: any) {
           }
         }
         publish(acs.mqttClient, `spot_client/${user.userInfo.userInfo.clientID}`, `allInit&${ids}`)
-        console.log('全拼信息')
       }
     }
   }
