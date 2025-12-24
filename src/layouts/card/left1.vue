@@ -61,9 +61,9 @@ watch(() => ac.currentItem, () => {
       <div v-if="isLine" class="text-light-50 flex items-center justify-center mt-3 mr-5">
         <MeterLine />
       </div>
-      <div v-if="!isLine" class="text-center mt--5">
+      <div v-if="!isLine" class="text-center">
         <h3 class="text-white">
-          平均电压：{{ ac.voltmeter[3].volValue }} V
+          相间电压：{{ ac.voltmeter[3].volValue }} V
         </h3>
       </div>
     <!-- 内容区 -->

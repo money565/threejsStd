@@ -115,26 +115,26 @@ export const useAppCacheStore = defineStore('appCache', () => {
   })
 
   const voltmeter = ref<voltmeterOpt[]>([{
-    volName: 'A项电压',
+    volName: 'A相电压',
     volValue: 0,
   }, {
-    volName: 'B项电压',
+    volName: 'B相电压',
     volValue: 0,
   }, {
-    volName: 'C项电压',
+    volName: 'C相电压',
     volValue: 0,
   }, {
     volName: '总电压',
     volValue: 0,
   }])
   const ammeter = ref<ammeterOpt[]>([{
-    ammName: 'A项电流',
+    ammName: 'A相',
     ammValue: 0,
   }, {
-    ammName: 'B项电流',
+    ammName: 'B相',
     ammValue: 0,
   }, {
-    ammName: 'C项电流',
+    ammName: 'C相',
     ammValue: 0,
   }, {
     ammName: '总电流',
@@ -150,29 +150,29 @@ export const useAppCacheStore = defineStore('appCache', () => {
 
   function resetData() {
     voltmeter.value = [{
-      volName: 'A项电压',
+      volName: 'A相电压',
       volValue: 0,
     }, {
-      volName: 'B项电压',
+      volName: 'B相电压',
       volValue: 0,
     }, {
-      volName: 'C项电压',
+      volName: 'C相电压',
       volValue: 0,
     }, {
       volName: '总电压',
       volValue: 0,
     }]
     ammeter.value = [{
-      ammName: 'A项电流',
+      ammName: 'A相',
       ammValue: 0,
     }, {
-      ammName: 'B项电流',
+      ammName: 'B相',
       ammValue: 0,
     }, {
-      ammName: 'C项电流',
+      ammName: 'C相',
       ammValue: 0,
     }, {
-      ammName: 'C项电流',
+      ammName: 'C相',
       ammValue: 0,
     }]
     power.value = {

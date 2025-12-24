@@ -60,12 +60,12 @@ watch(() => ac.currentItem, () => {
             <SvgIcon name="line" />
           </el-icon>
         </div>
-        <div v-if="!showAmterLine" class="text-light-50 flex items-center justify-center mt--2 mr-8">
+        <div v-if="!showAmterLine" class="text-light-50 flex items-center justify-center mt--2 mr-6">
           <div v-for="(item, index) in acAmmeter" :key="index" class="ml-2">
             <ammMeter class="flex w-38 h-55" :amm-name="item.ammName" :amm-value="item.ammValue" />
           </div>
         </div>
-        <div v-if="!showAmterLine" class="text-center mt--5">
+        <div v-if="!showAmterLine" class="text-center">
           <h3 class="text-white">
             平均电流：{{ ac.ammeter[3].ammValue }} A
           </h3>

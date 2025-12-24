@@ -24,8 +24,8 @@ const option = computed<echarts.EChartsOption>(() => {
         endAngle: 90,
         min: 0,
         max: 2700,
-        center: ['92%', '70%'],
-        radius: '180%',
+        center: ['95%', '70%'],
+        radius: '170%',
         splitNumber: 3,
         itemStyle: {
           color: '#58D9F9',
@@ -85,7 +85,7 @@ const option = computed<echarts.EChartsOption>(() => {
           height: 15,
           fontSize: 20,
           borderRadius: 8,
-          offsetCenter: ['-50%', '40%'],
+          offsetCenter: ['-50%', '30%'],
           valueAnimation: true,
           formatter(value) {
             return `${value}`

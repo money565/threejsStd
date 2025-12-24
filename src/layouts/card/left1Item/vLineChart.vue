@@ -264,7 +264,7 @@ const option = ref({
       data: acs.volteLine[2],
     },
     {
-      name: '平均电压',
+      name: '相间电压',
       type: 'line',
       smooth: true,
       showSymbol: false,
