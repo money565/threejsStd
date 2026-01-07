@@ -54,7 +54,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const currentProject = ref<number>()
   const currentItem = ref<string>('-')
   const canBeClickedItem = ['1t', '2t', '3t', '4t', '5t', '6t', '7t', '8t']
-  const itemPower = [1600, 1600, 2000, 2000, 1600, 1600, 800, 800]
+  const itemPower = [2309, 2309, 2887, 2889, 2309, 2309, 1155, 1155]
   const ItemOnline = ref()
   const projectList = ref<projectListOpt[]>([])
   const itemPF = ref(0)
@@ -94,7 +94,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const powerCurrentPercentShow = computed<number[]>(() => {
     const temp = []
     for (const i in allItemDatas.value.power) {
-      temp.push(Number((100 * allItemDatas.value.power[i].currentLoad / allItemDatas.value.power[i].maxLoad).toFixed(1)))
+      temp.push(Number((100 * allItemDatas.value.amt.cur[i] / itemPower[i]).toFixed(1)))
     }
     return temp
   })

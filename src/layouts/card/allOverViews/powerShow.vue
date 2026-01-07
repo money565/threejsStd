@@ -112,7 +112,7 @@ const option = computed<any>(() => {
           position: 'insideLeft',
           formatter(params: { dataIndex: string | number }) {
             // 右侧显示值
-            return `${acs.powerCurrentValueShow[Number(params.dataIndex)]}W`
+            return `${acs.powerCurrentValueShow[Number(params.dataIndex)]}KW`
           },
           color: '#fff',
           fontSize: 12,

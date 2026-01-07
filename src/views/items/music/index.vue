@@ -124,6 +124,9 @@ const nowTime = computed(() => {
         <div class="flex justify-center items-center mb-1">
           数据更新时间：{{ nowTime }}
         </div>
+        <div class="mb-1">
+          文件位置
+        </div>
       </div>
     </div>
   </transition>
