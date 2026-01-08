@@ -2,8 +2,19 @@
 import VConsole from 'vconsole'
 import { RouterView } from 'vue-router'
 
-const vConsole = new VConsole()
-vConsole.setOption({ log: { maxLogNumber: 5000 } })
+onMounted(() => {
+  const isDevelopment = import.meta.env.DEV
+  const isProduction = import.meta.env.PROD
+  const isTest = import.meta.env.MODE === 'test'
+  console.log('当前环境:', import.meta.env.MODE) // 'development' | 'production' | 'test'
+  console.log('是否是开发环境:', isDevelopment) // true/false
+  console.log('是否是生产环境:', isProduction) // true/false
+  console.log('是否是测试环境:', isTest) // true/false
+  if (isDevelopment) {
+    const vConsole = new VConsole()
+    vConsole.setOption({ log: { maxLogNumber: 5000 } })
+  }
+})
 </script>
 
 <template>
