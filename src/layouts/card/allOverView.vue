@@ -16,7 +16,7 @@ import volShow from './allOverViews/volShow.vue'
 
     <!-- 内容 -->
     <div class="z-10 h-100% w-100% flex flex-col bg-blue-500 bg-opacity-30">
-      <div class="w-100% h-10  block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+      <div class="w-100% h-10  block text-white text-center justify-center pt-3 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
         总览
       </div>
       <!-- 内容区 -->

@@ -62,6 +62,7 @@ onMounted(() => {
   addLights(scene)
   initCSS3D()
   importObjects(scene).then((res: any) => {
+    console.log(res)
     labelsItem.value = res
     nextTick(() => {
       labelRefs.value.forEach((label: { initLabel: () => any }) => {

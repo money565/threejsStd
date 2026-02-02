@@ -17,7 +17,7 @@ const acs = useAppCacheStore()
 
       <!-- 内容 -->
       <div class="z-10 h-183 w-100% flex flex-col bg-blue-500 bg-opacity-30">
-        <div class="flex w-100% h-9 pb-2 pt-2  text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+        <div class="flex w-100% h-10 pb-3 pt-3  text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
           参数和巡检
         </div>
 

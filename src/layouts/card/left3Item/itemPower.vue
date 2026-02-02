@@ -49,7 +49,7 @@ const option = computed<any>(() => {
         name: '',
         type: 'pie',
         center: ['50%', '50%'], // 圆心的位置
-        radius: ['70%', '85%'], // 环形图的本质就在这里 [内半径!=0，外半径] 外半径越大，圆越大
+        radius: ['60%', '75%'], // 环形图的本质就在这里 [内半径!=0，外半径] 外半径越大，圆越大
         avoidLabelOverlap: false, // 做同心圆用到
         clockwise: false, // 顺时针排列
         startAngle: 40, // 起始角度 影响不大
@@ -101,7 +101,7 @@ const option = computed<any>(() => {
         name: '',
         type: 'pie',
         center: ['50%', '50%'], // 圆心的位置
-        radius: ['55%', '65%'], // 环形图的本质就在这里 [内半径!=0，外半径] 外半径越大，圆越大
+        radius: ['45%', '55%'], // 环形图的本质就在这里 [内半径!=0，外半径] 外半径越大，圆越大
         avoidLabelOverlap: false, // 做同心圆用到
         clockwise: false, // 顺时针排列
         startAngle: 90, // 起始角度 影响不大

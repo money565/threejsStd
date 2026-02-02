@@ -53,7 +53,7 @@ export const useAppCacheStore = defineStore('appCache', () => {
   const mqttClient = ref()
   const currentProject = ref<number>()
   const currentItem = ref<string>('-')
-  const canBeClickedItem = ['1t', '2t', '3t', '4t', '5t', '6t', '7t', '8t']
+  const canBeClickedItem = ['1t', '2t', '3t', '4t', '5t', '6t', '7t', '8t', 'g1', 'g2']
   const itemPower = [2309, 2309, 2887, 2889, 2309, 2309, 1155, 1155]
   const ItemOnline = ref()
   const projectList = ref<projectListOpt[]>([])

@@ -46,11 +46,11 @@ watch(() => acs.currentItem, () => {
       <div class="absolute inset-0 rounded-lg border border-cyan-400/20 pointer-events-none" />
 
       <!-- 内容 -->
-      <div class="z-10 h-60 w-100% flex flex-col bg-blue-500 bg-opacity-30">
-        <div class="flex w-100% h-9 pt-2 text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
-          {{ acs.allOverView ? "环境" : "设备" }}
+      <div class="z-10 h-63 w-100% flex flex-col bg-blue-500 bg-opacity-30">
+        <div class="z-99 flex w-100% h-10 pt-4 text-white text-center justify-center bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+          {{ acs.allOverView ? "环境温湿度" : "设备温度" }}
         </div>
-        <div v-if="acs.allOverView " class="flex w-100% h-51">
+        <div v-if="acs.allOverView " class="flex w-100% h-51 ">
           <div class="flex text-light-50 w-50%">
             <environment :size="size" />
           </div>

@@ -43,8 +43,8 @@ watch(() => ac.currentItem, () => {
     <div class="absolute inset-0 rounded-lg border border-cyan-400/20 pointer-events-none" />
 
     <!-- 内容 -->
-    <div class="z-10 h-100% w-100% flex flex-col bg-blue-500 bg-opacity-30">
-      <div class="w-100% h-10  pt-2 block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
+    <div class="z-10 h-109% w-100% flex flex-col bg-blue-500 bg-opacity-30">
+      <div class="w-100% h-10  pt-4 block text-white text-center justify-center pt-1 bg-[linear-gradient(to_right,rgba(59,130,246,0.9),transparent)] backdrop-blur-sm">
         {{ ac.currentItem }}电压
       </div>
       <div class=" bg-blue-100 w-8 ml-115 mt-2 shadow" @click.prevent="linSwitch">
@@ -53,12 +53,12 @@ watch(() => ac.currentItem, () => {
         </el-icon>
       </div>
 
-      <div v-if="!isLine" class="text-light-50 flex  items-center justify-center mt-3 mr-5">
+      <div v-if="!isLine" class="text-light-50 flex  items-center justify-center mr-5">
         <div v-for="(item, index) in voltmeter" :key="index" class="ml-5">
           <Meter class="flex w-35 h-35" :vol-name="item.volName" :vol-value="item.volValue" />
         </div>
       </div>
-      <div v-if="isLine" class="text-light-50 flex items-center justify-center mt-3 mr-5">
+      <div v-if="isLine" class="text-light-50 flex items-center justify-center mr-5">
         <MeterLine />
       </div>
       <div v-if="!isLine" class="text-center">

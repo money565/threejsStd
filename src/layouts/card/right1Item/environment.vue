@@ -46,7 +46,7 @@ function updateChart() {
         humidity / 100 - 0.1,
         humidity / 100 - 0.15,
       ],
-      radius: '90%',
+      radius: '75%',
       center: ['50%', '40%'],
       color: props.colors,
       backgroundStyle: {
